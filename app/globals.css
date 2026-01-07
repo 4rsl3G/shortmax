@@ -1,26 +1,73 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* ========= THEME TOKENS =========
+   Tanpa gradient. Clean & elegant.
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: 12 12 14;        /* near-black */
+  --panel: 18 18 22;     /* card/panel */
+  --panel2: 22 22 28;    /* hover */
+  --text: 245 245 247;   /* off-white */
+  --muted: 170 170 180;
+  --border: 255 255 255;
+  --accent: 245 245 247; /* accent minimalis */
+  --shadow: 0 0 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="light"] {
+  --bg: 246 246 248;
+  --panel: 255 255 255;
+  --panel2: 246 246 248;
+  --text: 20 20 22;
+  --muted: 95 95 105;
+  --border: 0 0 0;
+  --accent: 20 20 22;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Base */
+html, body { height: 100%; }
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+}
+
+/* card/panel helpers */
+@layer utilities {
+  .ui-border { border: 1px solid rgb(var(--border) / 0.10); }
+  .ui-panel { background: rgb(var(--panel)); }
+  .ui-panel-hover:hover { background: rgb(var(--panel2)); }
+  .ui-muted { color: rgb(var(--muted)); }
+  .ui-shadow { box-shadow: 0 12px 30px rgb(0 0 0 / 0.22); }
+}
+
+/* shimmer */
+@layer utilities {
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    background: rgb(var(--border) / 0.06);
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--border) / 0.14),
+      transparent
+    );
+    animation: shimmer 1.2s infinite;
+  }
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* Scrollbar minimal */
+*::-webkit-scrollbar { height: 10px; width: 10px; }
+*::-webkit-scrollbar-thumb { background: rgb(var(--border) / 0.15); border-radius: 999px; }
+*::-webkit-scrollbar-track { background: transparent; }
